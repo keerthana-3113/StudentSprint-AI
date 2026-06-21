@@ -1,8 +1,6 @@
 const generateBtn = document.getElementById("generateBtn");
 const result = document.getElementById("result");
 
-const API_KEY = "AQ.Ab8RN6LpKAoFpE2UaJXu4M1vLJrdbSUxQBw-SJVjYOgoz20g9A";
-
 generateBtn.addEventListener("click", async () => {
 
     const subjects = document.getElementById("subjects").value;
@@ -14,82 +12,64 @@ generateBtn.addEventListener("click", async () => {
         return;
     }
 
-    result.innerText = "Generating your study plan...";
+    result.innerHTML = "Generating your study plan...";
 
-    const prompt = `
-    You are an expert academic mentor.
+    const prompt = `You are an expert academic mentor.
 
-    Create a personalized study plan.
+Create a personalized study plan.
 
-    Subjects: ${subjects}
+Subjects: ${subjects}
+Exam Date: ${examDate}
+Study Hours Per Day: ${studyHours}
 
-    Exam Date: ${examDate}
-
-    Study Hours Per Day: ${studyHours}
-
-    Instructions:
-    - Create a day-by-day study plan.
-    - Prioritize difficult subjects.
-    - Include revision sessions.
-    - Include short breaks.
-    - Keep the plan practical for students.
-    `;
+Instructions:
+- Create a day-by-day study plan.
+- Prioritize difficult subjects.
+- Include revision sessions.
+- Include short breaks.
+- Keep the plan practical for students.`;
 
     try {
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    contents: [
-                        {
-                            parts: [
-                                {
-                                    text: prompt
-                                }
-                            ]
-                        }
-                    ]
-                })
-            }
-        );
+        const response = await fetch("http://localhost:3000/generate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-api-key": "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",
+                "anthropic-version": "2023-06-01"
+            },
+            body: JSON.stringify({
+                model: "claude-haiku-4-5-20251001",
+                max_tokens: 1024,
+                messages: [
+                    {
+                        role: "user",
+                        content: prompt
+                    }
+                ]
+            })
+        });
 
         const data = await response.json();
+        console.log(data);
 
-console.log(data);
+        if (!response.ok) {
+            result.innerText = "API Error: " + (data.error?.message || response.statusText);
+            return;
+        }
 
-if (!data.candidates) {
-    result.innerText =
-        "Gemini Error: " + JSON.stringify(data);
-    return;
-}
+        if (data.content && data.content[0]?.text) {
+            const rawText = data.content[0].text;
+            result.innerHTML = rawText
+                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+                .replace(/^## (.*$)/gm, "<h3>$1</h3>")
+                .replace(/^- (.*$)/gm, "• $1<br>")
+                .replace(/\n/g, "<br>");
+        } else {
+            result.innerText = "No plan generated. Try again.";
+        }
 
-if (data.candidates) {
-    result.innerText =
-        data.candidates[0].content.parts[0].text;
-} else {
-    result.innerText = `
-PERSONALIZED STUDY PLAN
-
-Day 1:
-• DSA - 2 hrs
-• Java - 1 hr
-• Maths - 1 hr
-
-Day 2:
-• Software Engineering - 2 hrs
-• DSA Practice - 2 hrs
-
-Day 3:
-• Revision & Mock Test - 4 hrs
-`;
-}
     } catch (error) {
-        result.innerText =
-            "Something went wrong. Please try again.";
+        result.innerText = "Something went wrong. Check console.";
         console.error(error);
     }
 });
