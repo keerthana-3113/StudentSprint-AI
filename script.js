@@ -1,7 +1,7 @@
 const generateBtn = document.getElementById("generateBtn");
 const result = document.getElementById("result");
 
-const API_KEY = "AQ.Ab8RN6J3XCkEvPzdoyxw1NFr1SpY6oDZKSotqlXdR5ecRejRfQ";
+const API_KEY = "AQ.Ab8RN6LpKAoFpE2UaJXu4M1vLJrdbSUxQBw-SJVjYOgoz20g9A";
 
 generateBtn.addEventListener("click", async () => {
 
