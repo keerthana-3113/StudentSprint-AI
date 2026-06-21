@@ -4,30 +4,34 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static(".")); // serves your index.html and style.css
+app.use(express.static("."));
 
-const CLAUDE_API_KEY = "sk-ant-YOUR_KEY_HERE"; // paste your key here
+const GROQ_API_KEY = "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"; // paste groq key here
 
 app.post("/generate", async (req, res) => {
     try {
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
+        console.log("Request received:", req.body.messages[0].content.slice(0, 50));
+
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "x-api-key": "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",
-                "anthropic-version": "2023-06-01"
+                "Authorization": `Bearer ${"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"}`
             },
             body: JSON.stringify({
-                model: "claude-haiku-4-5-20251001",
+                model: "llama-3.1-8b-instant",
                 max_tokens: 1024,
                 messages: req.body.messages
             })
         });
 
         const data = await response.json();
+        console.log("Groq response status:", response.status);
+        console.log("Groq error detail:", JSON.stringify(data));
         res.json(data);
 
     } catch (error) {
+        console.error("Error:", error);
         res.status(500).json({ error: error.message });
     }
 });
