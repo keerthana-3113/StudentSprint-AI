@@ -8,13 +8,56 @@
 </head>
 <body>
     <div class="container">
+
         <h1>📚 StudentSprint AI</h1>
         <p class="tagline">Generate a personalized study plan using AI.</p>
 
         <div class="form-container">
 
+            <label>Education Level</label>
+            <select id="educationLevel">
+                <option value="">-- Select Level --</option>
+                <optgroup label="🏫 School">
+                    <option value="school_1_5">Class 1 - 5 (Primary)</option>
+                    <option value="school_6_8">Class 6 - 8 (Middle)</option>
+                    <option value="school_9_10">Class 9 - 10 (Secondary)</option>
+                    <option value="school_11_12_science">Class 11 - 12 (Science)</option>
+                    <option value="school_11_12_commerce">Class 11 - 12 (Commerce)</option>
+                    <option value="school_11_12_arts">Class 11 - 12 (Arts)</option>
+                </optgroup>
+                <optgroup label="🎓 College">
+                    <option value="college_btech">BTech / BE</option>
+                    <option value="college_bsc">BSc</option>
+                    <option value="college_bcom">BCom</option>
+                    <option value="college_ba">BA</option>
+                    <option value="college_mba">MBA</option>
+                    <option value="college_mtech">MTech / ME</option>
+                    <option value="college_msc">MSc</option>
+                    <option value="college_law">Law (LLB)</option>
+                    <option value="college_medical">MBBS / Medical</option>
+                </optgroup>
+                <optgroup label="📝 Competitive Exams">
+                    <option value="exam_jee">JEE (Main + Advanced)</option>
+                    <option value="exam_neet">NEET</option>
+                    <option value="exam_upsc">UPSC</option>
+                    <option value="exam_gate">GATE</option>
+                    <option value="exam_cat">CAT / MBA Entrance</option>
+                    <option value="exam_nda">NDA</option>
+                    <option value="exam_clat">CLAT</option>
+                    <option value="exam_ssc">SSC CGL / CHSL</option>
+                </optgroup>
+            </select>
+
             <label>Subjects</label>
-            <textarea id="subjects" placeholder="Example: DSA, Java, Maths, Software Engineering"></textarea>
+            <div class="subjects-wrapper">
+                <div id="presetSubjects" class="preset-subjects"></div>
+                <input
+                    type="text"
+                    id="customSubject"
+                    placeholder="+ Add custom subject and press Enter"
+                />
+                <div id="selectedSubjects" class="selected-subjects"></div>
+            </div>
 
             <div class="date-row">
                 <div class="date-group">
@@ -28,7 +71,7 @@
             </div>
 
             <label>Study Hours Per Day</label>
-            <input type="number" id="studyHours" placeholder="Enter hours">
+            <input type="number" id="studyHours" placeholder="Enter hours" min="1" max="16">
 
             <button id="generateBtn">Generate Study Plan</button>
 
@@ -38,8 +81,8 @@
             <h2>Your Study Plan</h2>
             <div id="result">Your generated plan will appear here...</div>
         </div>
-    </div>
 
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
